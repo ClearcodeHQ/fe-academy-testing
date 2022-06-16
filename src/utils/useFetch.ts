@@ -1,0 +1,55 @@
+import { useEffect, useReducer } from 'react';
+
+interface State {
+  data: string | null;
+  loading: boolean;
+  error: string | null;
+}
+
+type Action =
+| { type: 'loading' }
+| { type: 'response', data: string }
+| { type: 'error', error: string }
+
+function dataReducer(state: State, action: Action) {
+  switch (action.type) {
+    case 'loading':
+      return { ...state, loading: true };
+    case 'response':
+      return { ...state, loading: false, data: action.data };
+    case 'error':
+      return { ...state, loading: false, error: action.error };
+    default:
+      return state;
+  }
+}
+
+/**
+ * Custom React hook around `window.fetch` to encapsulate loading, error,
+ * and data states. Feel free to replace this with your request issuing client
+ * (i.e. axios, react-query, Apollo).
+ */
+export function useFetch(url: string, options = {}) {
+  const [{ loading, error, data }, dispatch] = useReducer(dataReducer, {
+    data: null,
+    loading: false,
+    error: null,
+  });
+
+  // Serialize the "fetch" options so it may become
+  // a dependency to the "useEffect" below.
+  const serializedOptions = JSON.stringify(options);
+
+  useEffect(() => {
+    dispatch({ type: 'loading' });
+
+    fetch(url, JSON.parse(serializedOptions))
+      .then((res) => {
+        return res.text();
+      })
+      .then((data) => dispatch({ type: 'response', data }))
+      .catch((error) => dispatch({ type: 'error', error }));
+  }, [url, serializedOptions]);
+
+  return { loading, error, data };
+}

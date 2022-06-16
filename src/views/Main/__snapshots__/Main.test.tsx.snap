@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Integration: MainView should match the snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="sc-bczRLJ hHQYvn"
+  >
+    <span>
+      Year: 2022
+    </span>
+  </div>
+  <span>
+    Counter
+  </span>
+  <button>
+    increment
+  </button>
+  <button>
+    decrement
+  </button>
+  <span>
+    count: 0
+  </span>
+  <p>
+    <span>
+      Fetching data...
+    </span>
+  </p>
+</DocumentFragment>
+`;
